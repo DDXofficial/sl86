@@ -2,7 +2,7 @@ import os
 
 # parselBox pre-release 2022-10-21
 
-# IMPORTANT: SET THIS BEFORE USING
+# IMPORTANT: SET THIS BEFORE USING 
 app_path = "/Users/ddx/86Box-2-py"
 machine_path = "/Users/ddx/86Box-2-py/machines"
 
