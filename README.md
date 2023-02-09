@@ -1,4 +1,4 @@
-# parselbox: a text-mode 86Box machine manager for macOS
+# hebi86 — a text-mode 86Box machine manager for macOS
 This text-mode manager consists of a singular Python script.
 Needless to say, you MUST have Python installed for this to function.
 
@@ -11,4 +11,4 @@ To use:
 
 I am available in the 86Box Discord server (https://discord.gg/86box) if you have any questions.
 
-_Last updated February 8, 2023_
+_Last updated February 9, 2023_
