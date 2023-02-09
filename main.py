@@ -1,6 +1,6 @@
 import os
 
-# parselbox current release
+# hebi86 current release
 
 # CODE GRABS APP AND MACHINE PATHS FROM TEXT FILES
 with open("app.txt","r") as file:
@@ -32,7 +32,7 @@ def machine_list_load():
             machines.append(file)
 
 # OUTPUT STARTS HERE.
-print("parselbox: A text-mode 86Box machine manager for macOS, written in Python")
+print("hebi86: A text-mode 86Box machine manager for macOS, written in Python")
 print("Author: Segev A. (DDX) - contact@ddxofficial.com\n")
 
 # VIEW APP AND MACHINE PATHS
