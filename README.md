@@ -1,4 +1,4 @@
-# hebi86 — a text-mode 86Box machine manager for macOS
+# SnakeLauncher86 (sl86) — a text-mode 86Box machine manager for macOS
 This text-mode manager consists of a singular Python script.
 Needless to say, you MUST have Python installed for this to function.
 
