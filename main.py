@@ -32,7 +32,7 @@ def machine_list_load():
             machines.append(file)
 
 # OUTPUT STARTS HERE.
-print("hebi86: A text-mode 86Box machine manager for macOS, written in Python")
+print("snakelauncher86 (sl86): A text-mode 86Box machine manager for macOS, written in Python")
 print("Author: Segev A. (DDX) - contact@ddxofficial.com\n")
 
 # VIEW APP AND MACHINE PATHS
@@ -90,6 +90,9 @@ while True:
         os.system("clear")
         print("[3] Create new machine")
         print("")
+        print("WARNING: Please note that this feature is currently being worked on.")
+        print("To create a new machine, create a folder in your machines directory and use option 4 to configure it.")
+        print("")
         while True:
             new_machine_input = input("Please choose a name for the new machine: ")
             print("")
@@ -123,7 +126,9 @@ while True:
         os.system(app_path + "/86Box.app/Contents/MacOS/86Box -S -P " + "\"" + machine_path + "/" + machines[s_machine_id] + "\"")
 
     elif main_menu_selection == 5:
-        print("Thank you for using parselbox!")
+        os.system("clear")
+        print("Thank you for using sl86!")
+        print("")
         break
     
     else:
