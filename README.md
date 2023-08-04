@@ -9,6 +9,6 @@ To use:
 4. Create a directory for machines to be stored and specify said location in `machines.txt`
 5. Run the script by going to the manager script's location in the terminal and running `python3 main.py`
 
-I am available in the 86Box Discord server (https://discord.gg/86box) if you have any questions.
+I am available in the 86Box Discord server (https://discord.86box.net) if you have any questions.
 
 _Last updated February 9, 2023_
