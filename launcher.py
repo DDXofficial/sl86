@@ -3,8 +3,7 @@ import platform
 import configparser as cp
 
 # sl86 current release, now adapted for Linux
-# (thanks Bruninho and SilverMoon for handling macOS for me!!)
-# https://github.com/brunocastello/Swift86
+# (thanks SilverMoon for handling macOS for me!!)
 # https://github.com/Moonif/MacBox
 
 # PLATFORM-AGNOSTIC SCREEN CLEARING METHOD
@@ -18,13 +17,13 @@ def clear_screen():
 clear_screen()
 
 # VERSION
-launcher_version = str("0.1")
+launcher_version = str("0.1a")
 
 # INTRO OUTPUT
 print("         ______  _____")
-print("   _____/ ( __ )/ ___/   snakelauncher86 (sl86) - Version", launcher_version)
+print("   _____/ ( __ )/ ___/  snakelauncher86 (sl86) - Version", launcher_version)
 print("  / ___/ / __  / __ \ 	A text-mode 86Box machine manager written in Python")
-print(" (__  ) / /_/ / /_/ / 	Author: Segev A. (DDX) - contact@ddxofficial.com")
+print(" (__  ) / /_/ / /_/ / 	Author: Segev A. (DDX) - ddxofficial@outlook.com")
 print("/____/_/\____/\____/  	Source code: https://github.com/ddxofficial/sl86")
 print("")
 
@@ -109,7 +108,7 @@ while True:
         # MACHINE CONFIGURATION BASED ON USER CHOICE
         print("\nMachine " + machine_id_input + " (" + machines[selected_machine_id] + ") selected for configuration.\n")
         print("Starting 86Box...")
-        print(os.system(app_path + " -S " + "\"" + machine_path + "/" + machines[selected_machine_id] + "/86box.cfg" + "\""))
+        os.system(app_path + " -S " + "\"" + machine_path + "/" + machines[selected_machine_id] + "/86box.cfg" + "\"")
     elif machine_decision_input == 'R' or machine_decision_input == 'r':
         clear_screen()
         print("")
