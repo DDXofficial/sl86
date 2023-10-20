@@ -2,10 +2,6 @@ import os
 import platform
 import configparser as cp
 
-# sl86 current release, now adapted for Linux
-# (thanks SilverMoon for handling macOS for me!!)
-# https://github.com/Moonif/MacBox
-
 # PLATFORM-AGNOSTIC SCREEN CLEARING METHOD
 def clear_screen():
     if platform.system() == 'Windows':
@@ -17,7 +13,7 @@ def clear_screen():
 clear_screen()
 
 # VERSION
-launcher_version = str("0.1a")
+launcher_version = str("0.2-pre")
 
 # INTRO OUTPUT
 print("         ______  _____")
@@ -43,11 +39,10 @@ machines = []
 machines_count = len(next(os.walk(machine_path))[1])
 
 # IMPORTING MACHINE NAMES TO 'machines' LIST
-def machine_list_load():
-    for file in machine_dir:
-        machines_list = os.path.join(machine_path, file)
-        if os.path.isdir(machines_list):
-            machines.append(file)
+for file in machine_dir:
+    machines_list = os.path.join(machine_path, file)
+    if os.path.isdir(machines_list):
+        machines.append(file)
 
 # JUST SO I DON'T COPY HUGE CHUNKS OF CODE EVERY TIME:
 def quit_text():
@@ -57,8 +52,11 @@ def quit_text():
     print("https://github.com/ddxofficial/sl86")
 
 def path_text():
-    print("86Box path:", app_path)
-    print("86Box machine path:", machine_path, "\n")
+    print("86Box path:")
+    print("-->", app_path)
+    print("")
+    print("86Box machine path:")
+    print("-->", machine_path, "\n")
 
 # VIEW APP AND MACHINE PATHS
 print("To set app and machine paths, edit the 'launcher.cfg' file.")
@@ -76,8 +74,8 @@ print("")
 
 while True:
     # MACHINE LISTING
-    machine_list_load()
-    print("Machines detected in directory:", machines_count)
+    machines.sort(key=str.lower)
+    print("Machines detected in directory:", machines_count, "\n")
     for i in range(machines_count):
         print(i + 1, "-", machines[i])
     print("")
