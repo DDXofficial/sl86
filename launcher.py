@@ -1,6 +1,11 @@
 import os
 import platform
 import configparser as cp
+import sys
+
+# sl86 current release, now adapted for Linux
+# (thanks SilverMoon for handling macOS for me!!)
+# https://github.com/Moonif/MacBox
 
 # PLATFORM-AGNOSTIC SCREEN CLEARING METHOD
 def clear_screen():
@@ -13,7 +18,7 @@ def clear_screen():
 clear_screen()
 
 # VERSION
-launcher_version = str("0.2-pre")
+launcher_version = str("0.1a")
 
 # INTRO OUTPUT
 print("         ______  _____")
@@ -21,6 +26,7 @@ print("   _____/ ( __ )/ ___/  snakelauncher86 (sl86) - Version", launcher_versi
 print("  / ___/ / __  / __ \ 	A text-mode 86Box machine manager written in Python")
 print(" (__  ) / /_/ / /_/ / 	Author: Segev A. (DDX) - ddxofficial@outlook.com")
 print("/____/_/\____/\____/  	Source code: https://github.com/ddxofficial/sl86")
+print("                  	Contributor: Alex. (CypherNebula84) - CypherNebula84@outlook.com")
 print("")
 
 # CONFIGPARSER: READS DATA FROM launcher.cfg
@@ -39,10 +45,11 @@ machines = []
 machines_count = len(next(os.walk(machine_path))[1])
 
 # IMPORTING MACHINE NAMES TO 'machines' LIST
-for file in machine_dir:
-    machines_list = os.path.join(machine_path, file)
-    if os.path.isdir(machines_list):
-        machines.append(file)
+def machine_list_load():
+    for file in machine_dir:
+        machines_list = os.path.join(machine_path, file)
+        if os.path.isdir(machines_list):
+            machines.append(file)
 
 # JUST SO I DON'T COPY HUGE CHUNKS OF CODE EVERY TIME:
 def quit_text():
@@ -52,11 +59,8 @@ def quit_text():
     print("https://github.com/ddxofficial/sl86")
 
 def path_text():
-    print("86Box path:")
-    print("-->", app_path)
-    print("")
-    print("86Box machine path:")
-    print("-->", machine_path, "\n")
+    print("86Box path:", app_path)
+    print("86Box machine path:", machine_path, "\n")
 
 # VIEW APP AND MACHINE PATHS
 print("To set app and machine paths, edit the 'launcher.cfg' file.")
@@ -74,18 +78,35 @@ print("")
 
 while True:
     # MACHINE LISTING
-    machines.sort(key=str.lower)
-    print("Machines detected in directory:", machines_count, "\n")
+    machine_list_load()
+    print("Machines detected in directory:", machines_count)
     for i in range(machines_count):
         print(i + 1, "-", machines[i])
     print("")
 
     # MACHINE CHOICE
-    machine_id_input = input("Select a machine (number - enter 0 to quit): ")
-    selected_machine_id = int(machine_id_input) - 1
+    machine_id_input = input("Select a machine (number), create a new one with 'c', or enter 0 to quit: ")
+
+    try:
+        machine_id = int(machine_id_input)
+    except ValueError:
+        print("Invalid input. Please enter a valid number.")
+        continue
+
+    if machine_id == 0:
+        clear_screen()
+        print("")
+        quit_text()
+        print("")
+        break
+    elif machine_id < 0 or machine_id > machines_count:
+        print("Invalid input. Please enter a valid number.")
+        continue
+
+    selected_machine_id = machine_id - 1
 
     # EARLY EXIT
-    if int(machine_id_input) == 0:
+    if selected_machine_id == -1:
         clear_screen()
         print("")
         quit_text()
@@ -94,7 +115,7 @@ while True:
 
     # LAUNCH, CONFIGURE, RETURN, QUIT?
     print("")
-    print("Machine selected: " + machine_id_input + " (" + machines[selected_machine_id] + ")")
+    print("Machine selected:", machine_id, "(", machines[selected_machine_id], ")")
     machine_decision_input = input("[L]aunch / [C]onfigure / [R]eturn to machine list / [Q]uit launcher? ")
 
     if machine_decision_input == 'L' or machine_decision_input == 'l':
