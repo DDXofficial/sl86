@@ -84,52 +84,46 @@ while True:
         print(i + 1, "-", machines[i])
     print("")
 
-    # MACHINE CHOICE
-machine_id_input = input("Select a machine (number), create a new one with 'c', or enter 0 to quit: ")
-
-if machine_id_input.lower() == 'c':
-    # Logic for creating a new machine
-    new_machine_name = input("Enter a name for the new machine: ")
-    new_machine_path = os.path.join(machine_path, new_machine_name)
-
-    # Check if the folder already exists
-    if os.path.exists(new_machine_path):
-        print(f"Machine '{new_machine_name}' already exists. Please choose a different name.")
-    else:
-        # Create a new folder for the machine
-        os.makedirs(new_machine_path)
-        print(f"New machine '{new_machine_name}' created in '{machine_path}'!")
-
-        # Ask if the user wants to configure the new machine
-        configure_new_machine = input("Do you want to configure this new machine? (y/n): ").lower()
-
-        if configure_new_machine == 'y':
-            # Configure the new machine
-            print("Starting 86Box for configuration...")
-            os.system(app_path + f" -S \"{machine_path}/{new_machine_name}/86box.cfg\"")
-
-        # Reload the script to detect the new machine
-        print("Reloading the script...")
-        script_path = os.path.abspath(__file__)
-        os.execv(sys.executable, [sys.executable, script_path])
-else:
     try:
-        machine_id = int(machine_id_input)
-    except ValueError:
-        print("Invalid input. Please enter a valid number or 'c' to create a new machine.")
-        continue
+        # MACHINE CHOICE
+        machine_id_input = input("Select a machine (number), create a new one with 'c', or enter 0 to quit: ")
 
-    if machine_id == 0:
-        clear_screen()
-        print("")
-        quit_text()
-        print("")
-        break
-    elif machine_id < 0 or machine_id > machines_count:
-        print("Invalid input. Please enter a valid number or 'c' to create a new machine.")
-        continue
+        if machine_id_input.lower() == 'c':
+            # Logic for creating a new machine
+            new_machine_name = input("Enter a name for the new machine: ")
+            new_machine_path = os.path.join(machine_path, new_machine_name)
 
-    selected_machine_id = machine_id - 1
+            # Check if the folder already exists
+            if os.path.exists(new_machine_path):
+                print(f"Machine '{new_machine_name}' already exists. Please choose a different name.")
+            else:
+                # Create a new folder for the machine
+                os.makedirs(new_machine_path)
+                print(f"New machine '{new_machine_name}' created in '{machine_path}'!")
+
+                # Ask if the user wants to configure the new machine
+                configure_new_machine = input("Do you want to configure this new machine? (y/n): ").lower()
+
+                if configure_new_machine == 'y':
+                    # Configure the new machine
+                    print("Starting 86Box for configuration...")
+                    os.system(app_path + f" -S \"{machine_path}/{new_machine_name}/86box.cfg\"")
+
+                # Reload the script to detect the new machine
+                print("Reloading the script...")
+                script_path = os.path.abspath(__file__)
+                os.execv(sys.executable, [sys.executable, script_path])
+
+        elif machine_id_input == '0':
+            selected_machine_id = -1  # To trigger early exit
+        else:
+            selected_machine_id = int(machine_id_input) - 1
+            if selected_machine_id < 0 or selected_machine_id >= machines_count:
+                raise ValueError("Invalid machine selection. Please enter a valid number or 'c'.")
+
+    except ValueError as ve:
+        print(f"Error: {ve}. Please enter a valid option.")
+        continue
 
     # EARLY EXIT
     if selected_machine_id == -1:
@@ -141,7 +135,7 @@ else:
 
     # LAUNCH, CONFIGURE, RETURN, QUIT?
     print("")
-    print("Machine selected:", machine_id, "(", machines[selected_machine_id], ")")
+    print("Machine selected:", machine_id_input, "(", machines[selected_machine_id], ")")
     machine_decision_input = input("[L]aunch / [C]onfigure / [R]eturn to machine list / [Q]uit launcher? ")
 
     if machine_decision_input == 'L' or machine_decision_input == 'l':
