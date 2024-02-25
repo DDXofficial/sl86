@@ -13,7 +13,7 @@ def clear_screen():
 clear_screen()
 
 # VERSION
-launcher_version = str("0.2-pre")
+launcher_version = str("0.2-beta")
 
 # INTRO OUTPUT
 print("         ______  _____")
