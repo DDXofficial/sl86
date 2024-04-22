@@ -8,6 +8,13 @@ This Python script allows you to manage your 86Box machines from the command lin
 3. Edit your `launcher.cfg` file to contain the path to your 86Box executable (i.e. `C:\Users\foo\86Box\86Box.exe`) and machines folder (i.e. `C:\Users\foo\86Box\machines`)
 4. Run `python launcher.py` or `python3 launcher.py` in your terminal of choice
 
+## Linux Flatpak Steps
+You MUST install a couple of depdendencies. On Ubuntu/Debian: `sudo apt-get install libslirp0 librtmidi6 libfluidsynth3`
+
+Other distros, you're on your own!
+
+## Support
+
 I am available in the 86Box Discord server (https://discord.86box.net) if you have any questions.
 
-_Last updated August 19, 2023_
+_Last updated April 21st, 2024_
