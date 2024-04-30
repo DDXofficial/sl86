@@ -9,7 +9,7 @@ This Python script allows you to manage your 86Box machines from the command lin
 4. Run `python launcher.py` or `python3 launcher.py` in your terminal of choice
 
 ## Linux Flatpak Steps
-You MUST install a couple of depdendencies. On Ubuntu/Debian: `sudo apt-get install libslirp0 librtmidi6 libfluidsynth3`
+You MUST install a couple of dependencies. On Ubuntu/Debian: `sudo apt-get install libslirp0 librtmidi6 libfluidsynth3`
 
 Other distros, you're on your own!
 
@@ -17,4 +17,4 @@ Other distros, you're on your own!
 
 I am available in the 86Box Discord server (https://discord.86box.net) if you have any questions.
 
-_Last updated April 21st, 2024_
+_Last updated April 21, 2024_
