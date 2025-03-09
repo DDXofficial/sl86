@@ -13,7 +13,7 @@ def clear_screen():
 clear_screen()
 
 # VERSION
-launcher_version = str("0.2-beta")
+launcher_version = str("0.2")
 
 # INTRO OUTPUT
 print("         ______  _____")
@@ -51,10 +51,11 @@ def quit_text():
     print("snakelauncher86 (sl86) - Version", launcher_version)
     print("https://github.com/ddxofficial/sl86")
 
-def path_text():
+def path_86box_text():
     print("86Box path:")
     print("-->", app_path)
-    print("")
+
+def path_machine_text():
     print("86Box machine path:")
     print("-->", machine_path, "\n")
 
@@ -62,7 +63,8 @@ def path_text():
 print("To set app and machine paths, edit the 'launcher.cfg' file.")
 print("Ensure that the 'app' path points to the actual executable instead of its path.")
 print("")
-path_text()
+path_86box_text()
+path_machine_text()
 
 # INSTRUCTIONS (i suck at python rn leave me alone)
 print("To create a machine, create a folder inside the designated 'machines' folder")
@@ -110,7 +112,8 @@ while True:
     elif machine_decision_input == 'R' or machine_decision_input == 'r':
         clear_screen()
         print("")
-        path_text()
+        path_86box_text()
+        path_machine_text()
         continue
     elif machine_decision_input == 'Q' or machine_decision_input == 'q':
         clear_screen()
@@ -119,8 +122,9 @@ while True:
         print("")
         break
     else:
-        print("Invalid input - try again")
+        print("Invalid input - try again.")
 
     clear_screen()
     print("")
-    path_text()
+    path_86box_text()
+    path_machine_text()
