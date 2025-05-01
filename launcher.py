@@ -1,6 +1,7 @@
 import os
 import platform
 import shutil
+import subprocess
 import configparser as cp
 
 # PLATFORM-AGNOSTIC SCREEN CLEARING METHOD
@@ -14,7 +15,7 @@ def clear_screen():
 clear_screen()
 
 # VERSION
-launcher_version = str("0.3-alpha")
+launcher_version = str("0.4")
 
 # INTRO OUTPUT
 print("         ______  _____")
@@ -35,7 +36,7 @@ config = cp.ConfigParser()
 
 # LAUNCHER FILES CHECK
 default_launcher_path = "launcher.cfg"
-default_launcher_template_path = "templates/launcher.cfg"
+default_launcher_template_path = os.path.join("templates", "launcher.cfg")
 
 launcher_check = os.path.exists(default_launcher_path)
 launcher_template_check = os.path.exists(default_launcher_template_path)
@@ -44,15 +45,21 @@ print("Checking for launcher config file...")
 if launcher_template_check is True:
     if launcher_check is False:
         print("WARNING: Launcher config file does not exist.")
-        print("Copying from template folder.")
+        print("Copying from template folder...")
         shutil.copyfile(default_launcher_template_path, default_launcher_path)
         print("")
         print("Default launcher config file copied successfully.")
         print("Please specify the app and machine paths and then launch again.")
+        print("")
         quit()
     elif launcher_check is True:
         print("Launcher config file found.")
         print("")
+    else:
+        # /!\ ERROR 0: NO LAUNCHER TEMPLATE FOUND
+        print("ERROR: Launcher template file not found.")
+        print("Ensure you have downloaded all files and try again.")
+        error_quit_text()
 
 # CONFIGPARSER (read from launcher.cfg)
 config.read(r'launcher.cfg')
@@ -114,9 +121,17 @@ def path_machine_text():
     print("86Box machine path:")
     print("-->", machine_path, "\n")
 
+def info_86box():
+    print("86Box executable information (logfile extraction):")
+    print("")
+    subprocess.run([app_path, "-Y"])
+    print("")
+
 # VIEW APP AND MACHINE PATHS
 path_86box_text()
+print("")
 path_machine_text()
+info_86box()
 
 # INSTRUCTIONS (i STILL suck at python rn leave me alone)
 print("To create a machine, create a folder inside the designated 'machines' folder")
@@ -155,12 +170,12 @@ while True:
         # MACHINE EXECUTION BASED ON USER CHOICE
         print("\nMachine " + machine_id_input + " (" + machines[selected_machine_id] + ") selected for launch.\n")
         print("Starting 86Box...")
-        os.system(app_path + " -P " + "\"" + machine_path + "/" + machines[selected_machine_id] + "\"")
+        subprocess.run([app_path, "-P", f"{machine_path}/{machines[selected_machine_id]}"])
     elif machine_decision_input == 'C' or machine_decision_input == 'c':
         # MACHINE CONFIGURATION BASED ON USER CHOICE
         print("\nMachine " + machine_id_input + " (" + machines[selected_machine_id] + ") selected for configuration.\n")
         print("Starting 86Box...")
-        os.system(app_path + " -S " + "\"" + machine_path + "/" + machines[selected_machine_id] + "/86box.cfg" + "\"")
+        subprocess.run([app_path, "-S", f"{machine_path}/{machines[selected_machine_id]}/86box.cfg"])
     elif machine_decision_input == 'R' or machine_decision_input == 'r':
         clear_screen()
         print("")
