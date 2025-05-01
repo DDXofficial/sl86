@@ -1,5 +1,6 @@
 import os
 import platform
+import shutil
 import configparser as cp
 
 # PLATFORM-AGNOSTIC SCREEN CLEARING METHOD
@@ -13,7 +14,7 @@ def clear_screen():
 clear_screen()
 
 # VERSION
-launcher_version = str("0.2")
+launcher_version = str("0.3-alpha")
 
 # INTRO OUTPUT
 print("         ______  _____")
@@ -23,11 +24,59 @@ print(" (__  ) / /_/ / /_/ / 	Author: Segev A. (DDX) - ddxofficial@outlook.com")
 print("/____/_/\____/\____/  	Source code: https://github.com/ddxofficial/sl86")
 print("")
 
-# CONFIGPARSER: READS DATA FROM launcher.cfg
+# ERROR HANDLING (EXIT)
+def error_quit_text():
+    print("Exiting.")
+    print("")
+    quit()
+
+# CONFIGPARSER (init)
 config = cp.ConfigParser()
+
+# LAUNCHER FILES CHECK
+default_launcher_path = "launcher.cfg"
+default_launcher_template_path = "templates/launcher.cfg"
+
+launcher_check = os.path.exists(default_launcher_path)
+launcher_template_check = os.path.exists(default_launcher_template_path)
+
+print("Checking for launcher config file...")
+if launcher_template_check is True:
+    if launcher_check is False:
+        print("WARNING: Launcher config file does not exist.")
+        print("Copying from template folder.")
+        shutil.copyfile(default_launcher_template_path, default_launcher_path)
+        print("")
+        print("Default launcher config file copied successfully.")
+        print("Please specify the app and machine paths and then launch again.")
+        quit()
+    elif launcher_check is True:
+        print("Launcher config file found.")
+        print("")
+
+# CONFIGPARSER (read from launcher.cfg)
 config.read(r'launcher.cfg')
 app_path = config.get('launcher', 'app')
 machine_path = config.get('launcher', 'machines')
+
+# /!\ ERROR 1: NO PATHS SET (CHANGEME)
+if app_path and machine_path == "CHANGEME":
+    print("ERROR: Paths not set in launcher.cfg.")
+    print("Please specify correct paths for the 86Box executable and machines.")
+    print("Instructions can be found in the launcher config file.")
+    error_quit_text()
+
+# /!\ ERROR 1.1A: INVALID PATH (86BOX)
+if os.path.exists(app_path) is False:
+    print("ERROR: Executable", app_path, "not found.")
+    print("Please check your config file for errors.")
+    error_quit_text()
+
+# /!\ ERROR 1.1B: INVALID PATH (MACHINES)
+if os.path.isdir(machine_path) is False:
+    print("ERROR: Directory", machine_path, "not found.")
+    print("Please check your config file for errors.")
+    error_quit_text()
 
 # MACHINE LIST
 machine_dir = os.listdir(machine_path)
@@ -37,6 +86,12 @@ machines = []
 
 # MACHINE QUANTITY
 machines_count = len(next(os.walk(machine_path))[1])
+
+# /!\ ERROR 2: NO MACHINES FOUND
+if machines_count == 0:
+    print("ERROR: No machines found in", machine_path + ".")
+    print("Please specify a path to a directory that contains machine files.")
+    error_quit_text()
 
 # IMPORTING MACHINE NAMES TO 'machines' LIST
 for file in machine_dir:
@@ -60,13 +115,10 @@ def path_machine_text():
     print("-->", machine_path, "\n")
 
 # VIEW APP AND MACHINE PATHS
-print("To set app and machine paths, edit the 'launcher.cfg' file.")
-print("Ensure that the 'app' path points to the actual executable instead of its path.")
-print("")
 path_86box_text()
 path_machine_text()
 
-# INSTRUCTIONS (i suck at python rn leave me alone)
+# INSTRUCTIONS (i STILL suck at python rn leave me alone)
 print("To create a machine, create a folder inside the designated 'machines' folder")
 print("and relaunch the script.\n")
 print("NOTE: Any machines/folders created while this script is active will not be")
