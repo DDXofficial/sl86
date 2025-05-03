@@ -1,6 +1,9 @@
 # SnakeLauncher86 (sl86) — a text-mode 86Box machine manager
 This Python script allows you to manage your [86Box](https://86box.net) machines from the command line.
-<br/>Originally written primarily with macOS in mind, this script has now been rewritten and extended to officially support Windows and Linux as well.
+<br/>Originally written with macOS in mind, this script has now been rewritten and extended to officially support Windows and Linux as well.
+
+## Requirements
+**Python 3.10** and above is recommended. This has not been tested on older versions.
 
 ## Setup
 1. Locate your 86Box installation
@@ -11,4 +14,4 @@ This Python script allows you to manage your [86Box](https://86box.net) machines
 
 I am available in the 86Box Discord server (https://discord.86box.net) if you have any questions.
 
-_Last updated May 1, 2025_
+_Last updated May 3, 2025_
