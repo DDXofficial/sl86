@@ -1,3 +1,4 @@
+#!/bin/python3
 import os
 import platform
 import shutil
@@ -149,7 +150,7 @@ def machine_create():
         print("ERROR: machine already exists")
         machine_create()
     else:
-        os.mkdir(os.path.join(machine_path, new_machine_name))
+        os.mkdir(new_machine_path)
         refresh_machine_list()
 
 def sl86_main_menu():
@@ -176,6 +177,7 @@ while True:
             path_86box_text()
             print("")
             path_machine_text()
+            refresh_machine_list()
             # MACHINE LISTING
             machines.sort(key=str.lower)
             print("Machines detected in directory:", machines_count, "\n")
@@ -199,7 +201,7 @@ while True:
             # LAUNCH, CONFIGURE, RETURN, QUIT?
             print("")
             print("Machine selected: " + machine_id_input + " (" + machines[selected_machine_id] + ")")
-            machine_decision_input = input("[L]aunch / [C]onfigure / [M]achine list / [R]eturn to main menu: ")
+            machine_decision_input = input("[L]aunch / [C]onfigure / [D]elete / [M]achine list / [R]eturn to main menu: ")
 
             if machine_decision_input == 'L' or machine_decision_input == 'l':
                 # MACHINE EXECUTION BASED ON USER CHOICE
@@ -211,6 +213,12 @@ while True:
                 print("\nMachine " + machine_id_input + " (" + machines[selected_machine_id] + ") selected for configuration.\n")
                 print("Starting 86Box...")
                 subprocess.run([app_path, "-S", f"{machine_path}/{machines[selected_machine_id]}/86box.cfg"])
+            elif machine_decision_input == 'D' or machine_decision_input == 'd':
+                print("\nMachine " + machine_id_input + " (" + machines[selected_machine_id] + ") selected for deletion.\n")
+                print("WARNING: ALL FILES IN MACHINE DIRECTORY WILL BE DELETED!\n")
+                confirm = input("Are you sure you want to delete this machine?: ")
+                if confirm == 'Y' or confirm == 'y':
+                    shutil.rmtree(os.path.join(machine_path, machines[selected_machine_id]))
             elif machine_decision_input == 'M' or machine_decision_input == 'M':
                 clear_screen()
                 print("")
