@@ -15,7 +15,7 @@ def clear_screen():
 clear_screen()
 
 # VERSION
-launcher_version = str("0.5")
+launcher_version = str("0.6 beta")
 
 # INTRO OUTPUT
 def sl86_header():
@@ -88,26 +88,26 @@ if os.path.isdir(machine_path) is False:
     print("Please check your config file for errors.")
     error_quit_text()
 
-# MACHINE LIST
-machine_dir = os.listdir(machine_path)
 
-# EMPTY MACHINES LIST VARIABLE
-machines = []
+# RECREATE 'machines' LIST to detect newly created machines
+def refresh_machine_list():
+    global machine_dir
+    machine_dir = os.listdir(machine_path)
 
-# MACHINE QUANTITY
-machines_count = len(next(os.walk(machine_path))[1])
+    global machines
+    machines = []
 
-# /!\ ERROR 2: NO MACHINES FOUND
-if machines_count == 0:
-    print("ERROR: No machines found in", machine_path + ".")
-    print("Please specify a path to a directory that contains machine files.")
-    error_quit_text()
+    global machines_count
+    machines_count = len(next(os.walk(machine_path))[1])
 
-# IMPORTING MACHINE NAMES TO 'machines' LIST
-for file in machine_dir:
-    machines_list = os.path.join(machine_path, file)
-    if os.path.isdir(machines_list):
-        machines.append(file)
+    # CREATE A MACHINE IF NONE ARE FOUND
+    if machines_count == 0:
+        print("ERROR: No machines found in", machine_path + ".")
+        machine_create()
+    for file in machine_dir:
+        machines_list = os.path.join(machine_path, file)
+        if os.path.isdir(machines_list):
+            machines.append(file)
 
 # INFORMATIONAL BLOCKS OF TEXT
 def quit_text():
@@ -130,27 +130,40 @@ def info_86box():
     subprocess.run([app_path, "-Y"])
     print("")
 
-def machine_create_instructions():
-    print("* HOW TO CREATE A MACHINE *")
-    print("")
-    print("Create a folder inside the designated machines folder and relaunch")
-    print("the script.")
-    print("Any machines/folders created while this script is active will not be")
-    print("detected and you will need to relaunch the script for them to appear.")
-    print("This will be worked on in future releases.")
-    print("")
+# Un-comment this if you still want to show the (outdated) machine creation instructions
+
+# def machine_create_instructions():
+#     print("* HOW TO CREATE A MACHINE *")
+#     print("")
+#     print("Create a folder inside the designated machines folder and relaunch")
+#     print("the script.")
+#     print("Any machines/folders created while this script is active will not be")
+#     print("detected and you will need to relaunch the script for them to appear.")
+#     print("This will be worked on in future releases.")
+#     print("")
+
+def machine_create():
+    new_machine_name = input("Enter new machine name: ")
+    new_machine_path = os.path.join(machine_path, new_machine_name)
+    if os.path.exists(new_machine_path) is True:
+        print("ERROR: machine already exists")
+        machine_create()
+    else:
+        os.mkdir(os.path.join(machine_path, new_machine_name))
+        refresh_machine_list()
 
 def sl86_main_menu():
     print("* MAIN MENU *")
     print("")
     print("1 - Select machine")
     print("2 - Display 86Box information")
+    print("3 - Create machine")
     print("0 - Exit")
     print("")
 
 while True:
     # MAIN MENU
-    machine_create_instructions()
+    refresh_machine_list()
     sl86_main_menu()
     main_menu_input = input("Select an option: ")
     main_menu_option = int(main_menu_input)
@@ -223,6 +236,10 @@ while True:
         sl86_header()
         info_86box()
         continue
+    elif main_menu_option == 3:
+        clear_screen()
+        sl86_header()
+        machine_create()
     elif main_menu_option == 0:
         clear_screen()
         print("")
