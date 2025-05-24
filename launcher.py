@@ -16,7 +16,7 @@ def clear_screen():
 clear_screen()
 
 # VERSION
-launcher_version = str("0.6 beta")
+launcher_version = str("0.6-beta")
 
 # INTRO OUTPUT
 def sl86_header():
@@ -25,6 +25,8 @@ def sl86_header():
     print("  / ___/ / __  / __ \ 	A text-mode 86Box machine manager written in Python")
     print(" (__  ) / /_/ / /_/ / 	Author: Segev A. (DDX) - ddxofficial@outlook.com")
     print("/____/_/\____/\____/  	Source code: https://github.com/DDXofficial/sl86")
+    print("")
+    print("Esteemed contributors: Zack13358")
     print("")
 
 sl86_header()
@@ -89,7 +91,6 @@ if os.path.isdir(machine_path) is False:
     print("Please check your config file for errors.")
     error_quit_text()
 
-
 # RECREATE 'machines' LIST to detect newly created machines
 def refresh_machine_list():
     global machine_dir
@@ -147,18 +148,22 @@ def machine_create():
     new_machine_name = input("Enter new machine name: ")
     new_machine_path = os.path.join(machine_path, new_machine_name)
     if os.path.exists(new_machine_path) is True:
-        print("ERROR: machine already exists")
+        print("ERROR: Machine", new_machine_name, "already exists.")
+        print("Please choose a new name.")
+        print("")
         machine_create()
     else:
         os.mkdir(new_machine_path)
+        print("Machine", new_machine_name, "successfully created.")
+        print("")
         refresh_machine_list()
 
 def sl86_main_menu():
     print("* MAIN MENU *")
     print("")
     print("1 - Select machine")
-    print("2 - Display 86Box information")
-    print("3 - Create machine")
+    print("2 - Create machine")
+    print("3 - Display 86Box information (nightly only)")
     print("0 - Exit")
     print("")
 
@@ -216,9 +221,11 @@ while True:
             elif machine_decision_input == 'D' or machine_decision_input == 'd':
                 print("\nMachine " + machine_id_input + " (" + machines[selected_machine_id] + ") selected for deletion.\n")
                 print("WARNING: ALL FILES IN MACHINE DIRECTORY WILL BE DELETED!\n")
-                confirm = input("Are you sure you want to delete this machine?: ")
-                if confirm == 'Y' or confirm == 'y':
+                machine_delete_confirm = input("Are you sure you want to delete this machine? (Y/N) ")
+                if machine_delete_confirm == 'Y' or machine_delete_confirm == 'y':
                     shutil.rmtree(os.path.join(machine_path, machines[selected_machine_id]))
+                elif machine_delete_confirm == 'N' or machine_delete_confirm == 'n':
+                    continue
             elif machine_decision_input == 'M' or machine_decision_input == 'M':
                 clear_screen()
                 print("")
@@ -239,21 +246,28 @@ while True:
             print("")
             path_86box_text()
             path_machine_text()
+    
     elif main_menu_option == 2:
+        clear_screen()
+        sl86_header()
+        path_86box_text()
+        print("")
+        path_machine_text()
+        machine_create()
+
+    elif main_menu_option == 3:
         clear_screen()
         sl86_header()
         info_86box()
         continue
-    elif main_menu_option == 3:
-        clear_screen()
-        sl86_header()
-        machine_create()
+
     elif main_menu_option == 0:
         clear_screen()
         print("")
         quit_text()
         print("")
         break
+
     else:
         clear_screen()
         sl86_header()
