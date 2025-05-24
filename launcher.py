@@ -1,3 +1,4 @@
+#!/bin/python3
 import os
 import platform
 import shutil
@@ -15,7 +16,7 @@ def clear_screen():
 clear_screen()
 
 # VERSION
-launcher_version = str("0.5")
+launcher_version = str("0.6-beta")
 
 # INTRO OUTPUT
 def sl86_header():
@@ -24,6 +25,8 @@ def sl86_header():
     print("  / ___/ / __  / __ \ 	A text-mode 86Box machine manager written in Python")
     print(" (__  ) / /_/ / /_/ / 	Author: Segev A. (DDX) - ddxofficial@outlook.com")
     print("/____/_/\____/\____/  	Source code: https://github.com/DDXofficial/sl86")
+    print("")
+    print("Esteemed contributors: Zack13358")
     print("")
 
 sl86_header()
@@ -88,26 +91,25 @@ if os.path.isdir(machine_path) is False:
     print("Please check your config file for errors.")
     error_quit_text()
 
-# MACHINE LIST
-machine_dir = os.listdir(machine_path)
+# RECREATE 'machines' LIST to detect newly created machines
+def refresh_machine_list():
+    global machine_dir
+    machine_dir = os.listdir(machine_path)
 
-# EMPTY MACHINES LIST VARIABLE
-machines = []
+    global machines
+    machines = []
 
-# MACHINE QUANTITY
-machines_count = len(next(os.walk(machine_path))[1])
+    global machines_count
+    machines_count = len(next(os.walk(machine_path))[1])
 
-# /!\ ERROR 2: NO MACHINES FOUND
-if machines_count == 0:
-    print("ERROR: No machines found in", machine_path + ".")
-    print("Please specify a path to a directory that contains machine files.")
-    error_quit_text()
-
-# IMPORTING MACHINE NAMES TO 'machines' LIST
-for file in machine_dir:
-    machines_list = os.path.join(machine_path, file)
-    if os.path.isdir(machines_list):
-        machines.append(file)
+    # CREATE A MACHINE IF NONE ARE FOUND
+    if machines_count == 0:
+        print("ERROR: No machines found in", machine_path + ".")
+        machine_create()
+    for file in machine_dir:
+        machines_list = os.path.join(machine_path, file)
+        if os.path.isdir(machines_list):
+            machines.append(file)
 
 # INFORMATIONAL BLOCKS OF TEXT
 def quit_text():
@@ -130,27 +132,44 @@ def info_86box():
     subprocess.run([app_path, "-Y"])
     print("")
 
-def machine_create_instructions():
-    print("* HOW TO CREATE A MACHINE *")
-    print("")
-    print("Create a folder inside the designated machines folder and relaunch")
-    print("the script.")
-    print("Any machines/folders created while this script is active will not be")
-    print("detected and you will need to relaunch the script for them to appear.")
-    print("This will be worked on in future releases.")
-    print("")
+# Un-comment this if you still want to show the (outdated) machine creation instructions
+
+# def machine_create_instructions():
+#     print("* HOW TO CREATE A MACHINE *")
+#     print("")
+#     print("Create a folder inside the designated machines folder and relaunch")
+#     print("the script.")
+#     print("Any machines/folders created while this script is active will not be")
+#     print("detected and you will need to relaunch the script for them to appear.")
+#     print("This will be worked on in future releases.")
+#     print("")
+
+def machine_create():
+    new_machine_name = input("Enter new machine name: ")
+    new_machine_path = os.path.join(machine_path, new_machine_name)
+    if os.path.exists(new_machine_path) is True:
+        print("ERROR: Machine", new_machine_name, "already exists.")
+        print("Please choose a new name.")
+        print("")
+        machine_create()
+    else:
+        os.mkdir(new_machine_path)
+        print("Machine", new_machine_name, "successfully created.")
+        print("")
+        refresh_machine_list()
 
 def sl86_main_menu():
     print("* MAIN MENU *")
     print("")
     print("1 - Select machine")
-    print("2 - Display 86Box information")
+    print("2 - Create machine")
+    print("3 - Display 86Box information (nightly only)")
     print("0 - Exit")
     print("")
 
 while True:
     # MAIN MENU
-    machine_create_instructions()
+    refresh_machine_list()
     sl86_main_menu()
     main_menu_input = input("Select an option: ")
     main_menu_option = int(main_menu_input)
@@ -163,6 +182,7 @@ while True:
             path_86box_text()
             print("")
             path_machine_text()
+            refresh_machine_list()
             # MACHINE LISTING
             machines.sort(key=str.lower)
             print("Machines detected in directory:", machines_count, "\n")
@@ -186,7 +206,7 @@ while True:
             # LAUNCH, CONFIGURE, RETURN, QUIT?
             print("")
             print("Machine selected: " + machine_id_input + " (" + machines[selected_machine_id] + ")")
-            machine_decision_input = input("[L]aunch / [C]onfigure / [M]achine list / [R]eturn to main menu: ")
+            machine_decision_input = input("[L]aunch / [C]onfigure / [D]elete / [M]achine list / [R]eturn to main menu: ")
 
             if machine_decision_input == 'L' or machine_decision_input == 'l':
                 # MACHINE EXECUTION BASED ON USER CHOICE
@@ -198,6 +218,14 @@ while True:
                 print("\nMachine " + machine_id_input + " (" + machines[selected_machine_id] + ") selected for configuration.\n")
                 print("Starting 86Box...")
                 subprocess.run([app_path, "-S", f"{machine_path}/{machines[selected_machine_id]}/86box.cfg"])
+            elif machine_decision_input == 'D' or machine_decision_input == 'd':
+                print("\nMachine " + machine_id_input + " (" + machines[selected_machine_id] + ") selected for deletion.\n")
+                print("WARNING: ALL FILES IN MACHINE DIRECTORY WILL BE DELETED!\n")
+                machine_delete_confirm = input("Are you sure you want to delete this machine? (Y/N) ")
+                if machine_delete_confirm == 'Y' or machine_delete_confirm == 'y':
+                    shutil.rmtree(os.path.join(machine_path, machines[selected_machine_id]))
+                elif machine_delete_confirm == 'N' or machine_delete_confirm == 'n':
+                    continue
             elif machine_decision_input == 'M' or machine_decision_input == 'M':
                 clear_screen()
                 print("")
@@ -218,17 +246,28 @@ while True:
             print("")
             path_86box_text()
             path_machine_text()
+    
     elif main_menu_option == 2:
+        clear_screen()
+        sl86_header()
+        path_86box_text()
+        print("")
+        path_machine_text()
+        machine_create()
+
+    elif main_menu_option == 3:
         clear_screen()
         sl86_header()
         info_86box()
         continue
+
     elif main_menu_option == 0:
         clear_screen()
         print("")
         quit_text()
         print("")
         break
+
     else:
         clear_screen()
         sl86_header()
