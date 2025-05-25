@@ -163,7 +163,7 @@ def sl86_main_menu():
     print("")
     print("1 - Select machine")
     print("2 - Create machine")
-    print("3 - Display 86Box information (nightly only)")
+    print("3 - Display 86Box information (macOS/Linux only)")
     print("0 - Exit")
     print("")
 
