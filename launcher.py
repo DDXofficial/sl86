@@ -132,18 +132,6 @@ def info_86box():
     subprocess.run([app_path, "-Y"])
     print("")
 
-# Un-comment this if you still want to show the (outdated) machine creation instructions
-
-# def machine_create_instructions():
-#     print("* HOW TO CREATE A MACHINE *")
-#     print("")
-#     print("Create a folder inside the designated machines folder and relaunch")
-#     print("the script.")
-#     print("Any machines/folders created while this script is active will not be")
-#     print("detected and you will need to relaunch the script for them to appear.")
-#     print("This will be worked on in future releases.")
-#     print("")
-
 def machine_create():
     new_machine_name = input("Enter new machine name: ")
     new_machine_path = os.path.join(machine_path, new_machine_name)
